@@ -1,0 +1,3 @@
+./find-cliques.py -v --file ../../network-repository/konect.uni-koblenz.de/10-100-nodes/brunson_southern_women/brunson_southern_women.edges
+./find-cliques.py -v --mode Iterative --file ../../network-repository/konect.uni-koblenz.de/10-100-nodes/brunson_southern_women/brunson_southern_women.edges
+./find-cliques.py -v --mode Recursive --file ../../network-repository/konect.uni-koblenz.de/10-100-nodes/brunson_southern_women/brunson_southern_women.edges
