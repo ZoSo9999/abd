@@ -16,7 +16,7 @@ import itertools
 #G1.AddEdge(5,1)
 #G1.AddEdge(5,32)
 
-def std_bron_kerbosch(G,k):
+def std_bron_kerbosch(G,k=None):
 
 	if k:
 		G = nx.k_core(G,k-1)
@@ -32,11 +32,13 @@ def std_bron_kerbosch(G,k):
 	def expand(r,p,x):
 		if not p and not x:
 			yield r[:]
-		while p:
-			n = p.pop()
+		u = max(p.union(x), key=lambda u: len(p & adj[u])) if p.union(x) else None
+		adj_u = adj[u] if u else set()
+		for n in p - adj_u:
 			yield from expand(r+[n], 
 				p.intersection(adj[n]),
 				x.intersection(adj[n]))
+			p.remove(n)
 			x.add(n)
 	
 	def expandK(r,p,x,k):
@@ -59,6 +61,7 @@ def std_bron_kerbosch(G,k):
 
 
 
+
 def std_plus_bron_kerbosch(G,k):
 
 	if k:
@@ -71,7 +74,6 @@ def std_plus_bron_kerbosch(G,k):
 	P = set(G)
 	R = list()
 	X = set()
-	
 	
 	def expand(r,p,x,k):
 		if k==0:
@@ -89,7 +91,9 @@ def std_plus_bron_kerbosch(G,k):
 	return expand(R,P,X,k)
 
 
-def nx_bron_kerbosch(G,k):
+
+
+def nx_bron_kerbosch(G,k=None):
 	
 	if k:
 		G = nx.k_core(G,k-1)
@@ -108,8 +112,8 @@ def nx_bron_kerbosch(G,k):
 	subg_init = cand_init.copy()
 	
 	def expand(subg, cand):
-		#u = max(subg, key=lambda u: len(cand & adj[u]))
-		for q in cand: # - adj[u]:
+		u = max(subg, key=lambda u: len(cand & adj[u]))
+		for q in cand - adj[u]:
 			cand.remove(q)
 			Q.append(q)
 			adj_q = adj[q]
@@ -142,6 +146,7 @@ def nx_bron_kerbosch(G,k):
 	else:
 		return expandK(cand_init,k)
 	
+
 
 
 def nx_plus_bron_kerbosch(G,k):
@@ -249,7 +254,7 @@ end = time.time()
 if args.output != "":
 	with open(args.output, 'w') as f:
 		for clique in gen_b:
-			f.write("%s\n" % clique)
+			f.write("%s\n" % clique.sort())
 else:
 	if verbose: 
 		print('printing all maximal cliques')

@@ -33,11 +33,15 @@ def std_bron_kerbosch(G,k):
 	
 	def expandK(r,p,x,k):
 		if k==0:
+			print("yield")
 			yield r[:]
 		if not p and not x:
 			return iter([])
 		while p:
 			n = p.pop()
+			print(n,r+[n],p.intersection(adj[n]),
+				x.intersection(adj[n]),
+				k-1)
 			yield from expandK(r+[n], 
 				p.intersection(adj[n]),
 				x.intersection(adj[n]),
@@ -164,6 +168,6 @@ if __name__ == "__main__":
 	# l2 = list(nx.find_cliques(G))
 	pprint(l2)
 	print(len(l2))
-	l3 = list(std_plus_bron_kerbosch(G,k))
+	l3 = list(enum_k_clique1(G,k))
 	pprint(l3)
 	print(len(l3))

@@ -11,4 +11,4 @@ konect.cc
 *.log
 
 # Ignora la cartella vscode
-.vscode
+.vscode/

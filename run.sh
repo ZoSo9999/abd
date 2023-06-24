@@ -32,7 +32,7 @@ for filepath in $GRAPHS_PATH
 do
     filename=$(basename ${filepath} | sed 's/.edges$//')
     # echo $FILE
-    $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "nx+" -c $COMPARISON_LOG -k 5
+    $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "nx" -c $COMPARISON_LOG -k 5
 
 	cat $OUTPUT_NX_DIR/${filename}_unsorted | sort > $OUTPUT_NX_DIR/${filename}.out
 	rm -f $OUTPUT_NX_DIR/${filename}_unsorted
