@@ -9,3 +9,6 @@ konect.cc
 
 # Ignora tutti i file in formato log
 *.log
+
+# Ignora la cartella vscode
+.vscode

@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 
-# ATTENTION: for the following import execute "pip3 install snap-stanford" and not "pip3 install snap"
 import readgraph as rg
 import networkx as nx
 import argparse
@@ -19,29 +18,39 @@ import itertools
 
 def std_bron_kerbosch(G,k):
 
+	if k:
+		G = nx.k_core(G,k-1)
+
 	if len(G) == 0:
 		return iter([])
 
 	adj = {u: {v for v in G[u] if v != u} for u in G}
 	P = set(G)
-	R = set()
+	R = list()
 	X = set()
 	
-	def expand(R,P,X):
-		if not P and not X:
-			return R
-	for n in P:
-		expand(R.add(n),P & adj[n], X & adj[n])
-		X.add(n)
-		P.remove(n)
+	def expand(r,p,x):
+		if not p and not x:
+			yield r[:]
+		while p:
+			n = p.pop()
+			yield from expand(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]))
+			x.add(n)
 	
-	def expandK(R,P,X,k):
+	def expandK(r,p,x,k):
 		if k==0:
-			return R
-	for n in P:
-		expandK(R.add(n),P & adj[n], X & adj[n],k-1)
-		X.add(n)
-		P.remove(n)
+			yield r[:]
+		if not p and not x:
+			return iter([])
+		while p:
+			n = p.pop()
+			yield from expandK(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]),
+				k-1)
+			x.add(n)
 	
 	if k is None:
 		return expand(R,P,X)
@@ -50,7 +59,40 @@ def std_bron_kerbosch(G,k):
 
 
 
+def std_plus_bron_kerbosch(G,k):
+
+	if k:
+		G = nx.k_core(G,k-1)
+
+	if len(G) == 0:
+		return iter([])
+
+	adj = {u: {v for v in G[u] if v != u} for u in G}
+	P = set(G)
+	R = list()
+	X = set()
+	
+	
+	def expand(r,p,x,k):
+		if k==0:
+			yield r[:]
+		if (not p and not x) or len(r)+len(p) < k:
+			return iter([])
+		while p:
+			n = p.pop()
+			yield from expand(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]),
+				k-1)
+			x.add(n)
+	
+	return expand(R,P,X,k)
+
+
 def nx_bron_kerbosch(G,k):
+	
+	if k:
+		G = nx.k_core(G,k-1)
 
 	if len(G) == 0:
 		return iter([])
@@ -66,8 +108,8 @@ def nx_bron_kerbosch(G,k):
 	subg_init = cand_init.copy()
 	
 	def expand(subg, cand):
-		u = max(subg, key=lambda u: len(cand & adj[u]))
-		for q in cand - adj[u]:
+		#u = max(subg, key=lambda u: len(cand & adj[u]))
+		for q in cand: # - adj[u]:
 			cand.remove(q)
 			Q.append(q)
 			adj_q = adj[q]
@@ -92,13 +134,54 @@ def nx_bron_kerbosch(G,k):
 				adj_q = adj[q]
 				cand_q = cand & adj_q
 				if cand_q:
-					yield from expand(cand_q, k-1)
+					yield from expandK(cand_q, k-1)
 			Q.pop()
 
 	if k is None:
 		return expand(subg_init, cand_init)
 	else:
 		return expandK(cand_init,k)
+	
+
+
+def nx_plus_bron_kerbosch(G,k):
+	
+	G = nx.k_core(G,k-1)
+
+	if len(G) == 0:
+		return iter([])
+
+	adj = {u: {v for v in G[u] if v != u} for u in G}
+
+	Q = []
+	cand_init = set(G)
+
+	if not cand_init:
+		return iter([])
+
+	def expand(cand, k):
+		
+		if len(Q)+len(cand) < k:
+			return iter([])
+		for q in cand:
+			last = Q[-1] if Q else -1
+			if last > q:
+				continue
+			Q.append(q)
+			if k == 1:
+				yield Q[:]
+			else:
+				adj_q = adj[q]
+				cand_q = cand & adj_q
+				if cand_q:
+					yield from expand(cand_q, k-1)
+			Q.pop()
+
+	return expand(cand_init, k)
+
+
+
+
 
 parser = argparse.ArgumentParser(description='Arguments for enumerating maximal cliques in a graph.')
 parser.add_argument('--file', '-f',
@@ -111,20 +194,23 @@ parser.add_argument('--verbose', '-v',
 					action='store_true')
 parser.add_argument('--output', '-o',
 					help='Name of output file for cliques')
-parser.add_argument('--mode',
-					help='Algorithm to be executed. One between \"standard\" (default) or \"nx\" implementation.',default="standard")
+parser.add_argument('--mode', '-m',
+		    		type=str,
+					help='Algorithm to be executed. One between \"standard\" (default), \"standard+\", \"nx\", \"nx+\" implementation.',default="standard")
 parser.add_argument('-k',
 					type=int,
 					default=0,
 					help='Find all cliques with size equals to k' )
+parser.add_argument('--compare', '-c',
+		    		help='Print all informations useful to compare a the file provided')
 args = parser.parse_args()
 
 #print(dir(snap)) # print all methods
 
 
 # print('verbose=' + str(args.verbose));
+verbose = True if args.verbose else False
 
-if args.verbose: verbose = True
 if args.k is not None and args.k > 1:
 	k = args.k
 else:
@@ -139,12 +225,19 @@ else:
 	G.add_edge(1,2)
 	G.add_edge(2,4)
 
-if verbose: print('computing all maximal cliques with networkx')
+if verbose: print(f'computing all maximal cliques with {args.mode} implementaion')
 start = time.time()
 if args.mode == "standard":
-	gen_a, gen_b = itertools.tee()
-else:
+	gen_a, gen_b = itertools.tee(std_bron_kerbosch(G,k))
+elif args.mode == "nx":
 	gen_a, gen_b = itertools.tee(nx_bron_kerbosch(G,k))
+elif args.mode =="standard+" and k:
+	gen_a, gen_b = itertools.tee(std_plus_bron_kerbosch(G,k))
+elif args.mode == "nx+" and k:
+	gen_a, gen_b = itertools.tee(nx_plus_bron_kerbosch(G,k))
+else :
+	print("algorithm unaccepted")
+	exit()
 
 clique_count = 0
 
@@ -154,20 +247,22 @@ for clique in gen_a:
 end = time.time()
 
 if args.output != "":
-	f = open(args.output, 'w')
-	for clique in gen_b:
-		f.write("%s\n" % clique)
+	with open(args.output, 'w') as f:
+		for clique in gen_b:
+			f.write("%s\n" % clique)
 else:
-	if args.verbose: 
+	if verbose: 
 		print('printing all maximal cliques')
 	for clique in gen_b:
 		clique_count += 1
 		print(clique)
 
-if args.mode == "standard":
-	print(" MAXIMAL: seconds for enumerating %d cliques: %f" % (clique_count,end-start))
-else:
-	print(" NX implementation: seconds for enumerating %d %d-cliques: %f" % (clique_count,k,end-start))
+var = "maximal" if not k else str(k)
+if args.compare != "":	
+	with open(args.compare, 'a') as file:
+		print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start), file=file)
 
-if args.verbose: print("find-cliques.py: End of computation")
+print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start))
+
+if verbose: print("find-cliques.py: End of computation")
 

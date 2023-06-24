@@ -34,6 +34,8 @@ def std_bron_kerbosch(G,k):
 	def expandK(r,p,x,k):
 		if k==0:
 			yield r[:]
+		if not p and not x:
+			return iter([])
 		while p:
 			n = p.pop()
 			yield from expandK(r+[n], 
@@ -46,7 +48,37 @@ def std_bron_kerbosch(G,k):
 		return expand(R,P,X)
 	else:
 		return expandK(R,P,X,k)
+	
 
+
+def std_plus_bron_kerbosch(G,k):
+
+	if k:
+		G = nx.k_core(G,k-1)
+
+	if len(G) == 0:
+		return iter([])
+
+	adj = {u: {v for v in G[u] if v != u} for u in G}
+	P = set(G)
+	R = list()
+	X = set()
+	
+	def expand(r,p,x,k):
+		if k==0:
+			yield r[:]
+		if (not p and not x) or len(r)+len(p) < k:
+			return iter([])
+		while p:
+			n = p.pop()
+			yield from expand(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]),
+				k-1)
+			x.add(n)
+	
+	return expand(R,P,X,k)
+	
 
 
 def enum_k_clique1(G,k):
@@ -123,12 +155,15 @@ def enum_k_clique2(G,k):
 
 
 if __name__ == "__main__":
-	G = nx.karate_club_graph()
-	k = 3
-	l2 = list(enum_k_clique2(G,k))
+	G = nx.Graph()
+	G.add_nodes_from([1,2,3,4])
+	G.add_edges_from([(1, 2), (2, 3), (3,4)])
+	G1 = nx.karate_club_graph()
+	k = 2
+	l2 = list(std_bron_kerbosch(G,k))
 	# l2 = list(nx.find_cliques(G))
 	pprint(l2)
 	print(len(l2))
-	l3 = list(std_bron_kerbosch(G,k))
+	l3 = list(std_plus_bron_kerbosch(G,k))
 	pprint(l3)
 	print(len(l3))

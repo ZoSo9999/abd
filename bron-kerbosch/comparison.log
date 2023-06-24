@@ -1,2 +1,50 @@
-Linux ubuntu 5.19.0-43-generic #44~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Mon May 22 13:39:36 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
-Thu Jun 22 01:33:30 PM CEST 2023
+Linux ubuntu 5.19.0-45-generic #46~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Wed Jun 7 15:06:04 UTC 20 x86_64 x86_64 x86_64 GNU/Linux
+Sat Jun 24 11:41:07 AM CEST 2023
+comparing bron-kerbosch/nx/subelj_euroroad.out bron-kerbosch/std/subelj_euroroad.out
+comparing bron-kerbosch/nx/moreno_blogs_undirected.out bron-kerbosch/std/moreno_blogs_undirected.out
+comparing bron-kerbosch/nx/arenas-email.out bron-kerbosch/std/arenas-email.out
+comparing bron-kerbosch/nx/brunson_southern_women.out bron-kerbosch/std/brunson_southern_women.out
+comparing bron-kerbosch/nx/moreno_kangaroo.out bron-kerbosch/std/moreno_kangaroo.out
+comparing bron-kerbosch/nx/mit.out bron-kerbosch/std/mit.out
+comparing bron-kerbosch/nx/brunson_corporate_leadership.out bron-kerbosch/std/brunson_corporate_leadership.out
+comparing bron-kerbosch/nx/league-fr1-2016.out bron-kerbosch/std/league-fr1-2016.out
+comparing bron-kerbosch/nx/league-uk1-2013.out bron-kerbosch/std/league-uk1-2013.out
+comparing bron-kerbosch/nx/moreno_vdb.out bron-kerbosch/std/moreno_vdb.out
+comparing bron-kerbosch/nx/moreno_hens.out bron-kerbosch/std/moreno_hens.out
+comparing bron-kerbosch/nx/moreno_taro.out bron-kerbosch/std/moreno_taro.out
+comparing bron-kerbosch/nx/brunson_club_membership.out bron-kerbosch/std/brunson_club_membership.out
+comparing bron-kerbosch/nx/ucidata-gama.out bron-kerbosch/std/ucidata-gama.out
+comparing bron-kerbosch/nx/league-be1-2016.out bron-kerbosch/std/league-be1-2016.out
+comparing bron-kerbosch/nx/brunson_south_africa.out bron-kerbosch/std/brunson_south_africa.out
+comparing bron-kerbosch/nx/moreno_seventh.out bron-kerbosch/std/moreno_seventh.out
+comparing bron-kerbosch/nx/moreno_macaques.out bron-kerbosch/std/moreno_macaques.out
+comparing bron-kerbosch/nx/moreno_zebra.out bron-kerbosch/std/moreno_zebra.out
+comparing bron-kerbosch/nx/opsahl_southern_women.out bron-kerbosch/std/opsahl_southern_women.out
+comparing bron-kerbosch/nx/moreno_rhesus.out bron-kerbosch/std/moreno_rhesus.out
+comparing bron-kerbosch/nx/moreno_highschool.out bron-kerbosch/std/moreno_highschool.out
+comparing bron-kerbosch/nx/moreno_sampson.out bron-kerbosch/std/moreno_sampson.out
+comparing bron-kerbosch/nx/moreno_beach.out bron-kerbosch/std/moreno_beach.out
+comparing bron-kerbosch/nx/moreno_sheep.out bron-kerbosch/std/moreno_sheep.out
+comparing bron-kerbosch/nx/dolphins.out bron-kerbosch/std/dolphins.out
+comparing bron-kerbosch/nx/league-de1-2016.out bron-kerbosch/std/league-de1-2016.out
+comparing bron-kerbosch/nx/ucidata-zachary.out bron-kerbosch/std/ucidata-zachary.out
+comparing bron-kerbosch/nx/moreno_cattle.out bron-kerbosch/std/moreno_cattle.out
+comparing bron-kerbosch/nx/moreno_les_miserables.out bron-kerbosch/std/moreno_les_miserables.out
+comparing bron-kerbosch/nx/contiguous_usa.out bron-kerbosch/std/contiguous_usa.out
+comparing bron-kerbosch/nx/moreno_train.out bron-kerbosch/std/moreno_train.out
+comparing bron-kerbosch/nx/moreno_bison.out bron-kerbosch/std/moreno_bison.out
+comparing bron-kerbosch/nx/arenas_jazz.out bron-kerbosch/std/arenas_jazz.out
+comparing bron-kerbosch/nx/moreno_innovation.out bron-kerbosch/std/moreno_innovation.out
+comparing bron-kerbosch/nx/moreno_oz.out bron-kerbosch/std/moreno_oz.out
+comparing bron-kerbosch/nx/foodweb_baydry.out bron-kerbosch/std/foodweb_baydry.out
+comparing bron-kerbosch/nx/sociopatterns_hypertext.out bron-kerbosch/std/sociopatterns_hypertext.out
+comparing bron-kerbosch/nx/radoslaw_email.out bron-kerbosch/std/radoslaw_email.out
+comparing bron-kerbosch/nx/adjnoun_adjacency.out bron-kerbosch/std/adjnoun_adjacency.out
+comparing bron-kerbosch/nx/brunson_revolution.out bron-kerbosch/std/brunson_revolution.out
+comparing bron-kerbosch/nx/arenas_meta.out bron-kerbosch/std/arenas_meta.out
+comparing bron-kerbosch/nx/maayan_foodweb_undirected.out bron-kerbosch/std/maayan_foodweb_undirected.out
+comparing bron-kerbosch/nx/sociopatterns_infectious.out bron-kerbosch/std/sociopatterns_infectious.out
+comparing bron-kerbosch/nx/maayan_pdzbase.out bron-kerbosch/std/maayan_pdzbase.out
+comparing bron-kerbosch/nx/unicodelang.out bron-kerbosch/std/unicodelang.out
+comparing bron-kerbosch/nx/contact.out bron-kerbosch/std/contact.out
+comparing bron-kerbosch/nx/foodweb_baywet_undirected.out bron-kerbosch/std/foodweb_baywet_undirected.out
