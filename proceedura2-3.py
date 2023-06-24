@@ -10,37 +10,49 @@ import networkx as nx
 
 def std_bron_kerbosch(G,k):
 
+	if k:
+		G = nx.k_core(G,k-1)
+
 	if len(G) == 0:
 		return iter([])
 
 	adj = {u: {v for v in G[u] if v != u} for u in G}
 	P = set(G)
-	R = set()
+	R = list()
 	X = set()
 	
-	def expand(R,P,X):
-		if not P and not X:
-			yield R[:]
-		for n in P:
-			print("cazzo")
-			yield from expand(R.add(n), P & adj[n], X & adj[n])
-			X.add(n)
-			P.remove(n)
+	def expand(r,p,x):
+		if not p and not x:
+			yield r[:]
+		while p:
+			n = p.pop()
+			yield from expand(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]))
+			x.add(n)
 	
-	def expandK(R,P,X,k):
+	def expandK(r,p,x,k):
 		if k==0:
-			yield R[:]
-		for n in P:
-			yield from expandK(R.add(n), P & adj[n], X & adj[n], k-1)
-			X.add(n)
-			P.remove(n)
+			yield r[:]
+		while p:
+			n = p.pop()
+			yield from expandK(r+[n], 
+				p.intersection(adj[n]),
+				x.intersection(adj[n]),
+				k-1)
+			x.add(n)
 	
 	if k is None:
 		return expand(R,P,X)
 	else:
 		return expandK(R,P,X,k)
 
+
+
 def enum_k_clique1(G,k):
+
+	if k:
+		G = nx.k_core(G,k-1)
 
 	if len(G) == 0:
 		return iter([])
@@ -54,7 +66,6 @@ def enum_k_clique1(G,k):
 		return iter([])
 	
 	def expand(cand, k):
-
 		for q in cand:
 			last = Q[-1] if Q else -1
 			if last > q:
@@ -75,6 +86,9 @@ def enum_k_clique1(G,k):
 
 
 def enum_k_clique2(G,k):
+	
+	if k:
+		G = nx.k_core(G,k-1)
 
 	if len(G) == 0:
 		return iter([])
@@ -110,11 +124,11 @@ def enum_k_clique2(G,k):
 
 if __name__ == "__main__":
 	G = nx.karate_club_graph()
-	k = 4
-	#l1 = list(enum_k_clique2(G,k))
-	l2 = list(nx.find_cliques(G))
+	k = 3
+	l2 = list(enum_k_clique2(G,k))
+	# l2 = list(nx.find_cliques(G))
 	pprint(l2)
 	print(len(l2))
-	l3 = list(std_bron_kerbosch(G,None))
+	l3 = list(std_bron_kerbosch(G,k))
 	pprint(l3)
 	print(len(l3))

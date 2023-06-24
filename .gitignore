@@ -1,0 +1,11 @@
+# Ignora la cartella bron-kerbosch/nx
+bron-kerbosch/nx/
+
+# Ignora la cartella bron-kerbosch/std
+bron-kerbosch/std/
+
+# Ignora la cartella konect.cc
+konect.cc
+
+# Ignora tutti i file in formato log
+*.log
