@@ -14,6 +14,8 @@ GRAPHS_DIR=konect.cc
 GRAPHS_PATH=`find . -type f -name "*edges" -exec echo {} \;`
 # echo $GRAPHS_PATH
 
+SEC=120
+
 uname -a > $COMPARISON_LOG
 uname -a
 date >> $COMPARISON_LOG
@@ -30,21 +32,37 @@ fi
 echo "-------------------------"
 for filepath in $GRAPHS_PATH
 do
+    TIMEOUT=1
+
     filename=$(basename ${filepath} | sed 's/.edges$//')
     # echo $FILE
-    $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "nx" -c $COMPARISON_LOG -k 5
+    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "standard" -c $COMPARISON_LOG -k 4
 
-	cat $OUTPUT_NX_DIR/${filename}_unsorted | sort > $OUTPUT_NX_DIR/${filename}.out
-	rm -f $OUTPUT_NX_DIR/${filename}_unsorted
+    if [ $? -eq 124 ]; then
+        echo "!!! ${SEC} seconds timeout expired"
+        TIMEOUT=0
+    else
+        cat $OUTPUT_NX_DIR/${filename}_unsorted | sort > $OUTPUT_NX_DIR/${filename}.out
+	    rm -f $OUTPUT_NX_DIR/${filename}_unsorted
+    fi
 
 
-	$DIR/find-cliques.py --file ${filepath} --output $OUTPUT_STD_DIR/${filename}_unsorted --mode "standard" -c $COMPARISON_LOG -k 5
+    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_STD_DIR/${filename}_unsorted --mode "nx" -c $COMPARISON_LOG -k 4
 
-	cat $OUTPUT_STD_DIR/${filename}_unsorted | sort > $OUTPUT_STD_DIR/${filename}.out
-	rm -f $OUTPUT_STD_DIR/${filename}_unsorted
+    if [ $? -eq 124 ]; then
+        echo "!!! ${SEC} seconds timeout expired"
+        TIMEOUT=0
+    else
+        cat $OUTPUT_STD_DIR/${filename}_unsorted | sort > $OUTPUT_STD_DIR/${filename}.out
+	    rm -f $OUTPUT_STD_DIR/${filename}_unsorted
+    fi
 
-    echo comparing $OUTPUT_NX_DIR/${filename}.out $OUTPUT_STD_DIR/${filename}.out >> $COMPARISON_LOG
-	diff $OUTPUT_NX_DIR/${filename}.out $OUTPUT_STD_DIR/${filename}.out >> $COMPARISON_LOG
+
+
+    if [ $TIMEOUT -eq 1 ]; then
+        echo comparing $OUTPUT_NX_DIR/${filename}.out $OUTPUT_STD_DIR/${filename}.out >> $COMPARISON_LOG
+        diff $OUTPUT_NX_DIR/${filename}.out $OUTPUT_STD_DIR/${filename}.out >> $COMPARISON_LOG
+    fi
 
 	echo "-------------------------"
 done
