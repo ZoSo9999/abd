@@ -85,43 +85,7 @@ def std_plus_bron_kerbosch(G,k):
 	
 
 
-def enum_k_clique1(G,k):
-
-	if k:
-		G = nx.k_core(G,k-1)
-
-	if len(G) == 0:
-		return iter([])
-
-	adj = {u: {v for v in G[u] if v != u} for u in G}
-
-	Q = []
-	cand_init = set(G)
-
-	if not cand_init:
-		return iter([])
-	
-	def expand(cand, k):
-		for q in cand:
-			last = Q[-1] if Q else -1
-			if last > q:
-				continue
-			Q.append(q)
-			if k == 1:
-				yield Q[:]
-			else:
-				adj_q = adj[q]
-				cand_q = cand & adj_q
-				if cand_q:
-					yield from expand(cand_q, k-1)
-			Q.pop()
-
-	return expand(cand_init, k)
-
-
-
-
-def enum_k_clique2(G,k):
+def nx_bron_kerbosch(G,k=None):
 	
 	if k:
 		G = nx.k_core(G,k-1)
@@ -136,11 +100,26 @@ def enum_k_clique2(G,k):
 
 	if not cand_init:
 		return iter([])
+	
+	subg_init = cand_init.copy()
+	
+	def expand(subg, cand):
+		#print(cand==subg)
+		u = max(subg, key=lambda u: len(cand & adj[u]))
+		for q in cand - adj[u]:
+			cand.remove(q)
+			Q.append(q)
+			adj_q = adj[q]
+			subg_q = subg & adj_q
+			if not subg_q:
+				yield Q[:]
+			else:
+				cand_q = cand & adj_q
+				if cand_q:
+					yield from expand(subg_q, cand_q)
+			Q.pop()
 
-	def expand(cand, k):
-		
-		if len(Q)+len(cand) < k:
-			return iter([])
+	def expandK(cand, k):
 		for q in cand:
 			last = Q[-1] if Q else -1
 			if last > q:
@@ -152,10 +131,15 @@ def enum_k_clique2(G,k):
 				adj_q = adj[q]
 				cand_q = cand & adj_q
 				if cand_q:
-					yield from expand(cand_q, k-1)
+					yield from expandK(cand_q, k-1)
 			Q.pop()
 
-	return expand(cand_init, k)
+	if k is None:
+		return expand(subg_init, cand_init)
+	else:
+		return expandK(cand_init,k)
+	
+
 
 
 if __name__ == "__main__":
@@ -164,10 +148,8 @@ if __name__ == "__main__":
 	G.add_edges_from([(1, 2), (2, 3), (3,4)])
 	G1 = nx.karate_club_graph()
 	k = 2
-	l2 = list(std_bron_kerbosch(G,k))
-	# l2 = list(nx.find_cliques(G))
-	pprint(l2)
-	print(len(l2))
-	l3 = list(enum_k_clique1(G,k))
-	pprint(l3)
-	print(len(l3))
+	#l1 = list(std_bron_kerbosch(G,k))
+	l2 = list(nx_bron_kerbosch(G1))
+	# pprint(l2)
+	# print(len(l2))
+

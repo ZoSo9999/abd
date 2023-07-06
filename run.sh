@@ -36,10 +36,11 @@ do
 
     filename=$(basename ${filepath} | sed 's/.edges$//')
     # echo $FILE
-    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "standard" -c $COMPARISON_LOG -k 4
+    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_NX_DIR/${filename}_unsorted --mode "standard" -c $COMPARISON_LOG -k 10
 
     if [ $? -eq 124 ]; then
         echo "!!! ${SEC} seconds timeout expired"
+		echo "!!! ${filename}: ${SEC} seconds timeout expired" >> $COMPARISON_LOG
         TIMEOUT=0
     else
         cat $OUTPUT_NX_DIR/${filename}_unsorted | sort > $OUTPUT_NX_DIR/${filename}.out
@@ -47,10 +48,11 @@ do
     fi
 
 
-    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_STD_DIR/${filename}_unsorted --mode "nx" -c $COMPARISON_LOG -k 4
+    timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $OUTPUT_STD_DIR/${filename}_unsorted --mode "nx" -c $COMPARISON_LOG -k 10
 
     if [ $? -eq 124 ]; then
         echo "!!! ${SEC} seconds timeout expired"
+		echo "!!! ${filename}: ${SEC} seconds timeout expired" >> $COMPARISON_LOG
         TIMEOUT=0
     else
         cat $OUTPUT_STD_DIR/${filename}_unsorted | sort > $OUTPUT_STD_DIR/${filename}.out
