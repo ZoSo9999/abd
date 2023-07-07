@@ -23,7 +23,6 @@ import networkx as nx
 # old function. 
 def BuildNetworkxGraphFromFile_old_version(file_name, verbose=True):
     if verbose: print("BuildNetworkxGraphFromFile()")
-    import re # regular expressions
     if verbose: print("Building Networkx graph from file %s..." % file_name)
     G1 = nx.Graph()
     stack =set()
@@ -41,13 +40,13 @@ def BuildNetworkxGraphFromFile_old_version(file_name, verbose=True):
     return G1
 
 
-def BuildNetworkxGraphFromFile(file_name, verbose=True):
+def BuildNetworkxGraphFromFile(file_name, verbose=False):
     if verbose: print("BuildNetworkxGraphFromFile()")
-    import re # regular expressions
     if verbose: print("Building Networkx graph from file %s..." % file_name)
-    G1 = nx.Graph() # undirected graph
+    G = nx.Graph() # undirected graph
+    G.graph['name']=re.search(r"\/([^\/]+)\.[^\/]+$", file_name).group(1)
     lines = [line.strip() for line in open(file_name)]
     for line in lines:
         l = re.split('\t| ',line)
-        G1.add_edge(int(l[0]),int(l[1]))
-    return G1
+        G.add_edge(int(l[0]),int(l[1]))
+    return G

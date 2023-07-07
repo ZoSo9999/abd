@@ -78,7 +78,7 @@ def std_plus_bron_kerbosch(G,k):
 	def expand(r,p,x,k):
 		if k==0:
 			yield r[:]
-		if (not p and not x) or len(r)+len(p) < k:
+		if (not p and not x) or len(p) < k:
 			return iter([])
 		while p:
 			n = p.pop()
@@ -166,7 +166,7 @@ def nx_plus_bron_kerbosch(G,k):
 
 	def expand(cand, k):
 		
-		if len(Q)+len(cand) < k:
+		if len(cand) < k:
 			return iter([])
 		for q in cand:
 			last = Q[-1] if Q else -1
@@ -198,7 +198,8 @@ parser.add_argument('--verbose', '-v',
 					help='Produce verbose output',
 					action='store_true')
 parser.add_argument('--output', '-o',
-					help='Name of output file for cliques')
+					help='Name of output file for cliques',
+					required=True)
 parser.add_argument('--mode', '-m',
 		    		type=str,
 					help='Algorithm to be executed. One between \"standard\" (default), \"standard+\", \"nx\", \"nx+\" implementation.',default="standard")
@@ -221,7 +222,7 @@ if args.k is not None and args.k > 1:
 else:
 	k = None
 
-if args.file != "":
+if args.file:
 	G = rg.BuildNetworkxGraphFromFile(args.file,verbose)
 else:
 	if verbose: print('defining a new graph')
@@ -251,23 +252,21 @@ for clique in gen_a:
 
 end = time.time()
 
-if args.output != "":
+if args.compare:
+	if verbose: ('printing all maximal cliques')
 	with open(args.output, 'w') as f:
 		for clique in gen_b:
 			f.write("%s\n" % clique.sort())
 else:
-	if verbose: 
-		print('printing all maximal cliques')
-	for clique in gen_b:
-		clique_count += 1
-		print(clique)
+	if verbose: print('printing graph_name, #nodes, #edges, #cliques, time')
+	with open(args.output, 'a') as f:
+		f.write("%s;%d;%d;%d;%f\n" % (G.graph['name'],G.number_of_nodes(),G.number_of_edges(),clique_count,end-start))
 
-var = "maximal" if not k else str(k)
-if args.compare != "":	
-	with open(args.compare, 'a') as file:
-		print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start), file=file)
-
-print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start))
+if args.compare:
+	var = "maximal" if not k else str(k)
+	with open(args.compare, 'a') as f:
+		print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start), file=f)
+	print(f"### {args.mode} implmentation: seconds for enumerating %d {var}-cliques: %f" % (clique_count,end-start))
 
 if verbose: print("find-cliques.py: End of computation")
 
