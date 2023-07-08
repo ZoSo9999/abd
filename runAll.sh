@@ -2,8 +2,6 @@
 
 # modify theese
 SEC=120
-MODE=standard+
-K=4
 
 
 DIR=bron-kerbosch
@@ -17,14 +15,13 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 
-echo "graph_name; #nodes; #edges; #cliques; time" > $CSV
+echo " graph_name; #nodes; #edges; #maximal-cliques; tomita-time;; CC-time; #2-cliques; BK-time;; BK+-time;; CC-time;; CC+-time" > $CSV
 
 for filepath in $GRAPHS_PATH
 do
     filename=$(basename ${filepath} | sed 's/.edges$//')
 
     timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $CSV --mode $MODE -k $K
-
     if [ $? -eq 124 ]; then
         python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --verbose
     fi
