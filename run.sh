@@ -26,7 +26,7 @@ do
     timeout $SEC $DIR/find-cliques.py --file ${filepath} --output $CSV --mode $MODE -k $K
 
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode single --verbose
     fi
 done
 

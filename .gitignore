@@ -7,6 +7,9 @@ bron-kerbosch/std/
 # Ignora la cartella konect.cc
 konect.cc
 
+# Ignora la cartella konect.cc.backup
+konect.cc.backup
+
 # Ignora tutti i file in formato log
 *.log
 

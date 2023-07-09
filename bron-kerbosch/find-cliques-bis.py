@@ -208,6 +208,9 @@ parser.add_argument('-k',
 					default=0,
 					help='Find all cliques with size equals to k' )
 parser.add_argument('--info', '-i',
+		    		dest='info',
+				    action='store_true',
+				    default=False,
 		    		help='Print all informations useful about the graph')
 args = parser.parse_args()
 
@@ -254,12 +257,13 @@ end = time.time()
 
 if args.info:
 	if verbose: ('printing graph_name, #nodes, #edges')
-	with open(args.output, 'w') as f:
+	with open(args.output, 'a') as f:
 		f.write("%s;%d;%d;" % (G.graph['name'],G.number_of_nodes(),G.number_of_edges()))
 
-if verbose: print('printing graph_name, #nodes, #edges, #cliques, time')
-with open(args.output, 'a') as f:
-	f.write("%d;%f" % (clique_count,end-start))
+if verbose: print('printing clique_count, time')
 
-if verbose: print("find-cliques.py: End of computation")
+with open(args.output, 'a') as f:
+	f.write("%d;%.4f;" % (clique_count,end-start))
+
+if verbose: print("find-cliques-bis.py: End of computation")
 

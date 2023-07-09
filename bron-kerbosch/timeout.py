@@ -32,4 +32,4 @@ if args.mode == 'single':
 
 elif args.mode == 'all':
 	with open(args.output, 'a') as f:
-		f.write("%d;%f" % (0,int(args.time)))
+		f.write("%d;%.4f;" % (0,int(args.time)))
