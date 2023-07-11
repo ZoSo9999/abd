@@ -258,12 +258,12 @@ end = time.time()
 if args.info:
 	if verbose: ('printing graph_name, #nodes, #edges')
 	with open(args.output, 'a') as f:
-		f.write("%s;%d;%d;" % (G.graph['name'],G.number_of_nodes(),G.number_of_edges()))
+		f.write("%s;%d;%d;\n" % (G.graph['name'],G.number_of_nodes(),G.number_of_edges()))
 
 if verbose: print('printing clique_count, time')
 
 with open(args.output, 'a') as f:
-	f.write("%d;%.4f;" % (clique_count,end-start))
+	f.write("%s;%d;%.4f;\n" % (args.mode+str(args.k),clique_count,end-start))
 
 if verbose: print("find-cliques-bis.py: End of computation")
 

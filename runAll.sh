@@ -19,7 +19,7 @@ if [ ! -d "$OUTPUT_DIR" ]; then
 fi
 
 
-echo "graph_name; #nodes; #edges; #${K_0}-cliques; tomita-time;; CC-time; #${K_1}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time; #${K_2}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time; #${K_3}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time" >> $CSV
+#echo "graph_name; #nodes; #edges; #${K_0}-cliques; tomita-time;; CC-time; #${K_1}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time; #${K_2}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time; #${K_3}-cliques; BK-time;; BK+-time;; CC-time;; CC+-time" >> $CSV
 
 for filepath in $GRAPHS_PATH
 do
@@ -27,73 +27,74 @@ do
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard -k $K_0 --info
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard$K_0
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx -k $K_0
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx$K_0
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard -k $K_1
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard$K_1
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx -k $K_1
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx$K_1
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard+ -k $K_1
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard+$K_1
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx+ -k $K_1
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx+$K_1
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard -k $K_2
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard$K_2
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx -k $K_2
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard$K_2
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard+ -k $K_2
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard+$K_2
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx+ -k $K_2
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx+$K_2
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard -k $K_3
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard$K_3
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx -k $K_3
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx$K_3
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode standard+ -k $K_3
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print standard+$K_3
     fi
 
     timeout $SEC $DIR/find-cliques-bis.py --file ${filepath} --output $CSV --mode nx+ -k $K_3
     if [ $? -eq 124 ]; then
-        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose
+        python3 $DIR/timeout.py --file ${filepath} --output $CSV --time $SEC --mode all --verbose --print nx+$K_1
     fi
+    echo >> $CSV
     echo >> $CSV
     rm ${filepath}
     echo "ends with ${filename}" 

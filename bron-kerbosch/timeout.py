@@ -20,6 +20,9 @@ parser.add_argument('--mode', '-m',
 parser.add_argument('--time', '-t',
 					help='Timeout time',
 					required=True)
+parser.add_argument('--print', '-p',
+					help='Information for printing',
+					)
 args = parser.parse_args()
 
 G = rg.BuildNetworkxGraphFromFile(args.file)
@@ -32,4 +35,4 @@ if args.mode == 'single':
 
 elif args.mode == 'all':
 	with open(args.output, 'a') as f:
-		f.write("%d;%.4f;" % (0,int(args.time)))
+		f.write("%s;%d;%d;\n" % (args.print,0,int(args.time)))
